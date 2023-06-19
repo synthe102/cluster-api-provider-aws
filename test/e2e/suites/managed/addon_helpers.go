@@ -30,11 +30,12 @@ import (
 )
 
 type waitForEKSAddonToHaveStatusInput struct {
-	ControlPlane *ekscontrolplanev1.AWSManagedControlPlane
-	AWSSession   client.ConfigProvider
-	AddonName    string
-	AddonVersion string
-	AddonStatus  []string
+	ControlPlane       *ekscontrolplanev1.AWSManagedControlPlane
+	AWSSession         client.ConfigProvider
+	AddonName          string
+	AddonVersion       string
+	AddonStatus        []string
+	AddonConfiguration string
 }
 
 func waitForEKSAddonToHaveStatus(input waitForEKSAddonToHaveStatusInput, intervals ...interface{}) {
