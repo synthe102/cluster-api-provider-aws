@@ -67,11 +67,21 @@ func CheckAddonExistsSpec(ctx context.Context, inputGetter func() CheckAddonExis
 
 	By(fmt.Sprintf("Checking EKS addon %s is installed on cluster %s and is active", input.AddonName, input.ClusterName))
 	waitForEKSAddonToHaveStatus(waitForEKSAddonToHaveStatusInput{
-		ControlPlane:       controlPlane,
-		AWSSession:         input.AWSSession,
-		AddonName:          input.AddonName,
-		AddonVersion:       input.AddonVersion,
-		AddonStatus:        []string{eks.AddonStatusActive, eks.AddonStatusDegraded},
-		AddonConfiguration: input.AddonConfiguration,
+		ControlPlane: controlPlane,
+		AWSSession:   input.AWSSession,
+		AddonName:    input.AddonName,
+		AddonVersion: input.AddonVersion,
+		AddonStatus:  []string{eks.AddonStatusActive, eks.AddonStatusDegraded},
 	}, input.E2EConfig.GetIntervals("", "wait-addon-status")...)
+
+	if input.AddonConfiguration != "" {
+		By(fmt.Sprintf("Checking EKS addon %s has the correct configuration", input.AddonName))
+		checkEKSAddonConfiguration(checkEKSAddonConfigurationInput{
+			ControlPlane:       controlPlane,
+			AWSSession:         input.AWSSession,
+			AddonName:          input.AddonName,
+			AddonVersion:       input.AddonVersion,
+			AddonConfiguration: input.AddonConfiguration,
+		}, input.E2EConfig.GetIntervals("", "wait-addon-status")...)
+	}
 }
